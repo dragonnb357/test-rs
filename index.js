@@ -1,0 +1,67 @@
+console.log('Travel#2 self-test\n1.Вёрстка соответствует макету -48 баллов\n2.Отсутствие полосы прокрутки  - 15 баллов\n3.Адаптивное меню  - 10 балллов.');
+
+
+// burger 
+
+(function () {
+   const burgerItem = document.querySelector('.burger'); 
+   const menu = document.querySelector('.header-navigation');
+   const menuCloseItem = document.querySelector('.header_nav_close');
+   const menuLinks = document.querySelectorAll('.ul-navigation');
+    burgerItem.addEventListener('click', () => {
+       menu.classList.add('header-navigation_active');
+    });
+    menuCloseItem.addEventListener('click', () =>{
+        menu.classList.remove('header-navigation_active');  
+    });
+    if (window.innerWidth <= 390) {
+        for (let i = 0; i < menuLinks.length; i +=1) {
+            menuLinks[i].addEventListener('click', () => {
+                menu.classList.remove('header-navigation_active');   
+            });
+        };
+    };
+} ());
+
+
+// Scroll
+(function () {
+
+    const smoothScroll = function (targetEl, duration) {
+       // const headerElHeight = document.querySelector('.header').clientHeight;
+        let target = document.querySelector(targetEl);
+        let targetPosition = target.getBoundingClientRect().top //- headerElHeight;
+        let startPosition = window.pageXOffset;
+        let startTime = null;
+        
+        const ease = function(t,b,c,d) {
+            t /= d / 2;
+            if (t < 1) return c /2 * t * t + b;
+            t--;
+            return -c /2 * (t * (t - 2 ) - 1) + b;
+        };
+
+        const animation = function(currentTime){
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const run = ease(timeElapsed, startPosition, targetPosition, duration);
+            window.scrollTo(0,run);
+            if (timeElapsed < duration) requestAnimationFrame(animation);
+
+        };
+        requestAnimationFrame(animation);
+
+    };
+
+
+    const scrollTo = function () {
+        const links = document.querySelectorAll('.js-scroll');
+        links.forEach(each => {
+            each.addEventListener('click', function () {
+                const currentTarget = this.getAttribute('href');
+                smoothScroll(currentTarget, 1000);
+            });
+        });
+    };
+    scrollTo();
+}());
